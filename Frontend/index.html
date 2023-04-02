@@ -4,36 +4,22 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./index.css" />
     <title>Document</title>
   </head>
   <body>
-    <div id="container">
-      <h1>login Page</h1>
-      <input type="text" id="email" placeholder="enter email" />
-      <input type="text" id="password" placeholder="enter password" />
-      <button onclick="onLogin()">Login</button>
-    </div>
+    <h1>Welcome to HOMEPAGE</h1>
+    <h2 id="email">Email</h2>
+    <button onclick="logoutFun()">Logout</button>
   </body>
 </html>
 <script>
-  const onLogin = () => {
-    const payload = {
-      email: document.getElementById("email").value,
-      pass: document.getElementById("password").value,
-    };
-    fetch("http://localhost:8080/user/login", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        localStorage.setItem("token", res.token);
-      })
-      .catch((err) => console.log(err));
-  };
+  let email = localStorage.getItem("email");
+  console.log(email);
+  document.getElementById("email").innerText = email;
+
+  function logoutFun() {
+    localStorage.clear();
+    alert("You have logged out");
+    window.location.href = "login.html";
+  }
 </script>
