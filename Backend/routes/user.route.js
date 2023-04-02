@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { UserModel } = require('../models/User.model');
 
-
+let prev = null;
 userRouter.post("/signup", async (req, res) => {
 
     const { name, email, pass } = req.body
@@ -31,36 +31,90 @@ userRouter.post("/signup", async (req, res) => {
 
 
 userRouter.post("/login", async (req, res) => {
-
     const { email, pass } = req.body;
 
     try {
-        const user = await UserModel.find({ email })
-        if (user.length > 0) {
+        const user = await UserModel.findOne({ email });
+        const now = new Date();
+        const blockExpires1 = new Date(now.getTime() + 1 * 60 * 1000);
 
-            bcrypt.compare(pass, user[0].pass, (err, result) => {
 
-                if (result) {
+        if (new Date() > user.blockExpires) {
+            user.status = "active";
+        }
 
-                    let token = jwt.sign({ userID: user[0]._id }, "masai")
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-                    res.send({ msg: "Login Succsess", "token": token });
-                }
-                else {
-                    res.send({ msg: "user registration failed" });
+        if (user.status == "blocked") {
 
-                }
-            });
+            return res.status(403).json({ message: 'Your account is blocked' });
+        }
+
+        const isPasswordMatch = await bcrypt.compare(pass, user.pass);
+
+
+
+
+
+
+        if (!isPasswordMatch) {
+            user.failedAttempts += 1;
+            console.log("count", user.failedAttempts)
+            await user.save();
+
+            if (user.failedAttempts >= 5) {
+                user.status = "blocked";
+                user.blockExpires = blockExpires1
+                await user.save();
+                return res.status(403).json({ message: 'Your account is blocked' });
+            } else {
+                return res.status(401).json({ message: 'Incorrect password' });
+
+            }
 
         }
         else {
-            res.send({ msg: "wrong Credentials" })
+
+            // Successful login
+
+            user.failedAttempts = 0;
+            await user.save()
+            const token = jwt.sign({ id: user._id }, "masai");
+            res.status(200).json({ token });
+
+
+
         }
+
+        // user.blockExpires = blockExpires;
+
+        // if (user.status == "blocked") {
+        //     if (user.blockExpires.getTime() < now.getTime()) {
+        //         user.status = "active";
+        //         user.failedAttempts = 0;
+        //         user.blockExpires = undefined;
+        //         await user.save();
+        //     } else {
+        //         return res.status(403).json({ message: 'Your account is blocked. Please try again later.' });
+        //     }
+        // }
+
+
+
+        //------------------
+
+
+
+
     } catch (e) {
         res.send({ msg: "user registration failed", "error": e.message });
 
     }
 });
+
+
 
 module.exports = { userRouter }
 

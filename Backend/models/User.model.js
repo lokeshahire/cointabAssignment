@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-    // name: String,
     name: {
         type: String,
         required: true
@@ -13,9 +12,14 @@ const userSchema = mongoose.Schema({
     pass: {
         type: String,
         required: true
-    }
+    },
+    failedAttempts: { type: Number, default: 0 },
+    lastFailedAttempt: { type: Date },
+    status: { type: String, enum: ['active', 'blocked'], default: 'active' },
 
-});
+    blockExpires: { type: Date },
+
+}, { timestamps: true });
 
 const UserModel = mongoose.model("user", userSchema);
 
