@@ -36,7 +36,7 @@ userRouter.post("/login", async (req, res) => {
     try {
         const user = await UserModel.findOne({ email });
         const now = new Date();
-        const blockExpires1 = new Date(now.getTime() + 1 * 60 * 1000);
+        const blockExpires1 = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
 
         if (new Date() > user.blockExpires) {
@@ -49,14 +49,10 @@ userRouter.post("/login", async (req, res) => {
 
         if (user.status == "blocked") {
 
-            return res.status(403).json({ message: 'Your account is blocked' });
+            return res.status(403).json({ message: 'Your account is blocked , Please visit after 24Hrs' });
         }
 
         const isPasswordMatch = await bcrypt.compare(pass, user.pass);
-
-
-
-
 
 
         if (!isPasswordMatch) {
@@ -68,7 +64,7 @@ userRouter.post("/login", async (req, res) => {
                 user.status = "blocked";
                 user.blockExpires = blockExpires1
                 await user.save();
-                return res.status(403).json({ message: 'Your account is blocked' });
+                return res.status(403).json({ message: 'Your account is blocked ,  Please visit after 24Hrs' });
             } else {
                 return res.status(401).json({ message: 'Incorrect password' });
 
@@ -87,26 +83,6 @@ userRouter.post("/login", async (req, res) => {
 
 
         }
-
-        // user.blockExpires = blockExpires;
-
-        // if (user.status == "blocked") {
-        //     if (user.blockExpires.getTime() < now.getTime()) {
-        //         user.status = "active";
-        //         user.failedAttempts = 0;
-        //         user.blockExpires = undefined;
-        //         await user.save();
-        //     } else {
-        //         return res.status(403).json({ message: 'Your account is blocked. Please try again later.' });
-        //     }
-        // }
-
-
-
-        //------------------
-
-
-
 
     } catch (e) {
         res.send({ msg: "user registration failed", "error": e.message });
