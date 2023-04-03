@@ -9,11 +9,11 @@
   </head>
   <body>
     <div id="container">
-      <h1>SignUp Page</h1>
+      <h1>SignUp</h1>
       <input type="text" id="name" placeholder="enter name" />
       <input type="text" id="email" placeholder="enter email" />
       <input type="password" id="password" placeholder="enter password" />
-      <button onclick="onSignUp()">sign up</button>
+      <button class="btn" onclick="onSignUp()">sign up</button>
     </div>
   </body>
 </html>
@@ -32,7 +32,15 @@
       body: JSON.stringify(payload),
     })
       .then((res) => res.json())
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        if (res.msg == "registration successful") {
+          alert("User Registration Successful");
+          window.location.href = "login.html";
+        } else {
+          alert("Registration Failed");
+        }
+      })
       .catch((err) => console.log(err));
   };
 </script>

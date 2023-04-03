@@ -9,10 +9,11 @@
   </head>
   <body>
     <div id="container">
-      <h1>login Page</h1>
+      <h1 style="color: blueviolet">Login Here !</h1>
       <input type="text" id="email" placeholder="enter email" />
       <input type="text" id="password" placeholder="enter password" />
-      <button onclick="onLogin()">Login</button>
+      <button class="btn" onclick="onLogin()">Login</button>
+      <p>Link Here for <a href="signup.html">SignUp</a></p>
     </div>
   </body>
 </html>
@@ -37,13 +38,15 @@
         localStorage.setItem("email", res.email);
 
         if (res.token) {
-          alert("redirecting to homwpage");
+          alert("Sign In Successfull");
           window.location.href = "index.html";
         } else if (res.message == "Account Blocked") {
           alert(
             "You enters wrong password 5 times consecutively, Account Blocked ,  Please visit after 24Hrs"
           );
           localStorage.clear();
+        } else if (res.message == "Incorrect password") {
+          alert("You enters wrong password");
         }
       })
       .catch((err) => console.log(err));

@@ -4,12 +4,25 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+
     <title>Document</title>
   </head>
   <body>
-    <h1>Welcome to HOMEPAGE</h1>
-    <h2 id="email">Email</h2>
-    <button onclick="logoutFun()">Logout</button>
+    <nav><button class="btnLog" onclick="logoutFun()">Logout</button></nav>
+    <h1 style="margin: auto; text-align: center">
+      Welcome to CoinTab Assignment
+    </h1>
+    <div id="userBox">
+      <h1>User Detail</h1>
+      <img
+        src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-512.png"
+        alt=""
+      />
+      <br />
+      <label style="font-weight: bold" for="">Email:</label>
+      <span id="email">Email</span>
+    </div>
   </body>
 </html>
 <script>
