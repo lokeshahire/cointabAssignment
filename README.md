@@ -10,6 +10,10 @@
  
       If you enter Wrong Password Five times , then Your account will block for 24 hrs
 
+## Deployment : 
+
+### BackEnd  : https://puce-elated-hatchling.cyclic.app
+### FrontEnd : https://graceful-mermaid-ac1b10.netlify.app/
 
 ## Glimpse of My work
 
